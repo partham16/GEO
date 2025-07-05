@@ -3,3 +3,10 @@
 --trusted-host files.pythonhosted.org
 --trusted-host raw.githubusercontent.com
 --trusted-host github.com
+
+groq==0.29.0
+pyautogen==0.9.0
+python-dotenv==1.1.1
+pyvis==0.3.2
+streamlit==1.46.1
+tavily-python==0.7.9
