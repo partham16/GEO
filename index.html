@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Marketer's Suite - The Future of AI Content Strategy</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Slate 900 */
+            color: #E2E8F0; /* Slate 200 */
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: #1E293B; /* Slate 800 */
+            border: 1px solid #334155; /* Slate 700 */
+            border-radius: 0.75rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1), 0 8px 10px -6px rgba(56, 189, 248, 0.1);
+        }
+        .highlight-blue {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3B82F6;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .highlight-green {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22C55E;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        /* Main Tab styling */
+        .main-tab-button {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .main-tab-button.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+        }
+        .main-tab-content { display: none; }
+        .main-tab-content.active { display: block; }
+        
+        /* Strategy Option styling */
+        .strategy-option {
+            cursor: pointer;
+            border: 1px solid #334155;
+            transition: all 0.2s ease-in-out;
+        }
+        .strategy-option:hover {
+            background-color: #334155;
+            border-color: #475569;
+        }
+        .strategy-option.active {
+            background-color: #38bdf81A;
+            border-color: #38bdf8;
+        }
+        .strategy-content { display: none; }
+        .strategy-content.active { display: block; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="text-center py-16 md:py-24 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+                Beyond Search. <span class="gradient-text">Beyond Content.</span>
+            </h1>
+            <p class="mt-4 text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+                Introducing the <strong>Agentic Marketer's Suite</strong>: A platform that transforms simple user queries into complete, optimized content strategies, executed by a team of specialized AI agents.
+            </p>
+            <a href="#architecture" class="mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-sky-600 transition-colors">
+                Explore the Architecture
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Core Architecture Section -->
+        <section id="architecture" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">System Architecture</h2>
+                <p class="text-slate-400 mt-2">A multi-agent system for autonomous content strategy and creation.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card p-6"><div class="flex items-center gap-4 mb-4"><svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"></path></svg><h3 class="text-xl font-bold text-white">Task Generation Layer</h3></div><p class="text-slate-400">The <strong>ChiefMarketingOfficer Agent</strong> transforms a simple user query (e.g., "best car") into multiple, detailed strategic tasks for the team.</p></div>
+                <div class="card p-6"><div class="flex items-center gap-4 mb-4"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-.707-.707M18.364 18.364l-.707-.707M5.636 18.364l-.707.707M18.364 5.636l-.707.707"></path></svg><h3 class="text-xl font-bold text-white">Performance & Optimization</h3></div><p class="text-slate-400">The <strong>Semantic Firewall</strong> and <strong>Logic Path Analyzer</strong> work together to make the content creation process efficient and transparent.</p></div>
+                <div class="card p-6"><div class="flex items-center gap-4 mb-4"><svg class="w-8 h-8 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><h3 class="text-xl font-bold text-white">Generative Output Analysis</h3></div><p class="text-slate-400">The <strong>Pre-flight GEO Check</strong> provides predictive analytics on the generated content's quality and likelihood of success before it's published.</p></div>
+            </div>
+        </section>
+
+        <!-- Data Flow Diagram Section -->
+        <section class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Presentation-Worthy Application Flow</h2>
+                <p class="text-slate-400 mt-2">From a simple query to a complete, analyzed content package.</p>
+            </div>
+            <div class="p-4 md:p-8 bg-slate-800 rounded-lg border border-slate-700">
+                 <svg width="100%" viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1"/><stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1"/></linearGradient><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/></marker></defs>
+                    <style>.box { fill: #1E293B; stroke: #334155; stroke-width: 1.5; rx: 8; }.text-main { font-family: 'Inter', sans-serif; fill: #E2E8F0; font-size: 14px; font-weight: 600; text-anchor: middle; }.text-desc { font-family: 'Inter', sans-serif; fill: #94A3B8; font-size: 11px; text-anchor: middle; }.line { stroke: #475569; stroke-width: 2; marker-end: url(#arrow); fill: none; }</style>
+                    <g transform="translate(400, 50)"><rect x="-125" y="-25" width="250" height="50" class="box"/><text x="0" y="-5" class="text-main">1. User Input</text><text x="0" y="15" class="text-desc">e.g., "best photographer in berlin"</text></g>
+                    <g transform="translate(400, 150)"><rect x="-125" y="-25" width="250" height="50" class="box" style="fill:url(#grad1); stroke: #a78bfa;"/><text x="0" y="-5" class="text-main" style="fill:#fff;">2. CMO Agent: Task Generation</text><text x="0" y="15" class="text-desc" style="fill:#fff; opacity:0.8;">Creates multiple strategic briefs</text></g>
+                    <g transform="translate(170, 300)"><rect x="-125" y="-35" width="250" height="70" class="box"/><text x="0" y="-10" class="text-main">3. ContentStrategist Agent</text><text x="0" y="10" class="text-desc">Researches, finds unique angle</text><text x="0" y="25" class="text-desc">& surprising statistic.</text></g>
+                    <g transform="translate(630, 300)"><rect x="-125" y="-35" width="250" height="70" class="box"/><text x="0" y="-10" class="text-main">4. Copywriter & ArtDirector</text><text x="0" y="10" class="text-desc">Writes content & generates</text><text x="0" y="25" class="text-desc">image prompts.</text></g>
+                    <g transform="translate(170, 450)"><rect x="-125" y="-25" width="250" height="50" class="box"/><text x="0" y="-5" class="text-main">TOOL: Semantic Firewall</text><text x="0" y="15" class="text-desc">Caches searches, saves time/cost.</text></g>
+                    <g transform="translate(630, 450)"><rect x="-125" y="-25" width="250" height="50" class="box"/><text x="0" y="-5" class="text-main">TOOL: GEO Analyzer</text><text x="0" y="15" class="text-desc">Scores final content.</text></g>
+                    <g transform="translate(400, 580)"><rect x="-125" y="-25" width="250" height="50" class="box" style="fill:#1E293B; stroke: #38bdf8;"/><text x="0" y="0" class="text-main">5. Final Output & Dashboard</text></g>
+                    <path d="M 400 75 V 125" class="line"/>
+                    <path d="M 400 175 C 400 225, 270 225, 170 265" class="line"/><text x="300" y="230" class="text-desc">Strategic Brief</text>
+                    <path d="M 170 335 V 425" class="line"/><text x="200" y="385" class="text-desc">Uses Tool</text>
+                    <path d="M 170 335 C 270 335, 270 375, 170 375" class="line" transform="translate(0, 40)" style="marker-end:none; stroke-dasharray: 4;"/>
+                    <path d="M 300 300 C 350 300, 450 300, 500 300" class="line"/><text x="400" y="295" class="text-desc">Outline</text>
+                    <path d="M 630 335 V 425" class="line"/><text x="660" y="380" class="text-desc">Analyzes</text>
+                    <path d="M 170 475 C 170 525, 270 525, 400 555" class="line"/><text x="250" y="530" class="text-desc">Performance Logs</text>
+                    <path d="M 630 475 C 630 525, 530 525, 400 555" class="line"/><text x="550" y="530" class="text-desc">GEO Scores</text>
+                </svg>
+            </div>
+        </section>
+
+        <!-- The Strategic Agent Section -->
+        <section class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">The Creative Strategist Advantage</h2>
+                <p class="text-slate-400 mt-2">Our agent doesn't just write. It thinks. It's programmed to outperform competitors by achieving key strategic goals.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="mb-8 border-b border-slate-700 flex justify-center">
+                <button class="main-tab-button active py-4 px-6 text-lg font-semibold" onclick="openMainTab(event, 'photographer')">Example 1: Best Photographer</button>
+                <button class="main-tab-button py-4 px-6 text-lg font-semibold" onclick="openMainTab(event, 'car')">Example 2: Best Car to Buy</button>
+            </div>
+
+            <!-- Main Tab Content: Photographer -->
+            <div id="photographer" class="main-tab-content active">
+                <div class="grid lg:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4">1. Simple User Input:</h3>
+                        <p class="text-slate-300 bg-slate-900/50 p-4 rounded-lg border border-slate-700">"best photographer in berlin"</p>
+                        
+                        <h3 class="text-xl font-bold text-white mt-6 mb-4">2. AI-Generated Strategic Tasks:</h3>
+                        <div id="photographer-strategies" class="space-y-3 bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <p class="text-slate-300 text-sm">The CMO agent detects ambiguity and proposes multiple targeted content strategies:</p>
+                            <div class="strategy-option active p-3 rounded-md" data-strategy="wedding" onclick="switchStrategy('photographer', 'wedding')"><strong class="text-sky-400">Option A (Wedding):</strong> Write a blog post for client Anna Schmidt Photography, titled 'How to Find the Best Photographer in Berlin for Your Wedding.' Focus on the unique 'neighborhood vibe' angle.</div>
+                            <div class="strategy-option p-3 rounded-md" data-strategy="business" onclick="switchStrategy('photographer', 'business')"><strong class="text-slate-400">Option B (Business):</strong> Write a guide on 'Choosing a Corporate Event Photographer in Berlin,' focusing on professionalism and turnaround time.</div>
+                        </div>
+                        
+                        <div class="strategy-content active" data-strategy-content="photographer-wedding">
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">3. Strategic Search Generation (for Wedding):</h4>
+                            <div class="card p-4"><p class="text-sm text-slate-400 font-mono">"common wedding photographer tips blog"<br>"what do couples regret about their wedding photos reddit"<br>"unique berlin wedding photo locations not brandenburg gate"<br>"surprising wedding photography statistics 2025"</p></div>
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">4. High-Signal Sources Consulted:</h4>
+                            <div class="card p-4 flex gap-4 items-center">
+                                <img src="https://placehold.co/40x40/FFFFFF/1E293B?text=WB" alt="Wedding Blog Logo" class="w-10 h-10 rounded-full p-1 bg-white">
+                                <div><p class="font-semibold text-white">Hochzeitsguide (Wedding Blog)</p><p class="text-sm text-slate-400"><strong>Search Intent:</strong> Analyze top articles to find content gaps and common advice to beat.</p></div>
+                            </div>
+                        </div>
+                        <div class="strategy-content" data-strategy-content="photographer-business">
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">3. Strategic Search Generation (for Business):</h4>
+                            <div class="card p-4"><p class="text-sm text-slate-400 font-mono">"corporate event photography pricing berlin"<br>"how to choose a photographer for a business conference"<br>"linkedin article event photography ROI"</p></div>
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">4. High-Signal Sources Consulted:</h4>
+                            <div class="card p-4 flex gap-4 items-center">
+                                <img src="https://static.licdn.com/aero-v1/sc/h/al2o9zrvru7skd8hehw312hr5" alt="LinkedIn Logo" class="w-10 h-10 rounded-full bg-white p-1" onerror="this.onerror=null;this.src='https://placehold.co/40x40/FFFFFF/0A66C2?text=LI';">
+                                <div><p class="font-semibold text-white">LinkedIn Articles & Business Journals</p><p class="text-sm text-slate-400"><strong>Search Intent:</strong> Understand corporate needs and professional tone for business photography.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <div class="strategy-content active" data-strategy-content="photographer-wedding">
+                            <h4 class="font-semibold text-white mb-4 text-xl">5. Strategic Output & Verification (Wedding):</h4>
+                            <div class="text-slate-300 space-y-4 text-sm mb-6">
+                                <p><strong class="text-sky-400 block mb-1">Unique Angle Found:</strong> <span class="highlight-blue">...Instead of the usual locations, consider matching your photographer's style to the unique vibe of a Berlin neighborhood. A raw, edgy shoot in Kreuzberg demands a different approach...</span></p>
+                                <p><strong class="text-violet-400 block mb-1">Surprising Statistic Found:</strong> <span class="highlight-green">...a recent survey revealed that over 70% of couples now prefer a candid, documentary style over traditional posed photos...</span></p>
+                            </div>
+                            <h5 class="font-semibold text-white text-lg mt-6">Predicted GEO Score</h5>
+                            <div class="mt-3 space-y-3 text-sm">
+                                <div><p class="flex justify-between"><span>Brand Sentiment</span><span class="font-bold text-green-400">9/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 90%"></div></div></div>
+                                <div><p class="flex justify-between"><span>Citation Propensity</span><span class="font-bold text-amber-400">7/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-amber-400 h-1.5 rounded-full" style="width: 70%"></div></div></div>
+                            </div>
+                        </div>
+                         <div class="strategy-content" data-strategy-content="photographer-business">
+                            <h4 class="font-semibold text-white mb-4 text-xl">5. Strategic Output & Verification (Business):</h4>
+                            <div class="text-slate-300 space-y-4 text-sm mb-6">
+                                <p><strong class="text-sky-400 block mb-1">Unique Angle Found:</strong> <span class="highlight-blue">...Beyond a simple headshot, modern corporate photography captures the energy of your team. We analyze how different lighting setups can convey innovation versus stability...</span></p>
+                                <p><strong class="text-violet-400 block mb-1">Surprising Statistic Found:</strong> <span class="highlight-green">...a LinkedIn study shows that profiles with professionally-shot photos receive 14 times more views, but posts featuring 'in-action' team photos get 5 times more engagement...</span></p>
+                            </div>
+                            <h5 class="font-semibold text-white text-lg mt-6">Predicted GEO Score</h5>
+                            <div class="mt-3 space-y-3 text-sm">
+                                <div><p class="flex justify-between"><span>Brand Sentiment</span><span class="font-bold text-green-400">8/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 80%"></div></div></div>
+                                <div><p class="flex justify-between"><span>Citation Propensity</span><span class="font-bold text-green-400">9/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 90%"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Tab Content: Car -->
+            <div id="car" class="main-tab-content">
+                 <div class="grid lg:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4">1. Simple User Input:</h3>
+                        <p class="text-slate-300 bg-slate-900/50 p-4 rounded-lg border border-slate-700">"best car to buy"</p>
+                        
+                        <h3 class="text-xl font-bold text-white mt-6 mb-4">2. AI-Generated Strategic Tasks:</h3>
+                        <div id="car-strategies" class="space-y-3 bg-slate-800 p-4 rounded-lg border border-slate-700">
+                             <p class="text-slate-300 text-sm">The CMO agent identifies different buyer personas and proposes targeted strategies:</p>
+                            <div class="strategy-option active p-3 rounded-md" data-strategy="family" onclick="switchStrategy('car', 'family')"><strong class="text-sky-400">Option A (Family):</strong> Write a guide for young families in Germany, focusing on Total Cost of Ownership and safety.</div>
+                            <div class="strategy-option p-3 rounded-md" data-strategy="commuter" onclick="switchStrategy('car', 'commuter')"><strong class="text-slate-400">Option B (Commuter):</strong> Create a comparison of the best electric city cars, focusing on range vs. charging infrastructure in major German cities.</div>
+                        </div>
+                        
+                        <div class="strategy-content active" data-strategy-content="car-family">
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">3. Strategic Search Generation (for Family):</h4>
+                            <div class="card p-4"><p class="text-sm text-slate-400 font-mono">"hidden costs of car ownership germany"<br>"most overlooked feature for family cars with child seats"<br>"unexpected car repair cost statistics ADAC"</p></div>
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">4. High-Signal Sources Consulted:</h4>
+                            <div class="card p-4 flex gap-4 items-center">
+                                <img src="https://www.adac.de/-/media/adac/images/logos/adac_logo_2020.png" alt="ADAC Logo" class="w-10 h-10 rounded-full bg-white p-1" onerror="this.onerror=null;this.src='https://placehold.co/40x40/FFFFFF/000000?text=ADAC';">
+                                <div><p class="font-semibold text-white">ADAC Testberichte</p><p class="text-sm text-slate-400"><strong>Search Intent:</strong> Find official safety ratings and long-term reliability data.</p></div>
+                            </div>
+                        </div>
+                        <div class="strategy-content" data-strategy-content="car-commuter">
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">3. Strategic Search Generation (for Commuter):</h4>
+                            <div class="card p-4"><p class="text-sm text-slate-400 font-mono">"real world EV winter range vs advertised"<br>"munich public ev charger availability peak hours"<br>"hidden costs of electric car ownership germany"</p></div>
+                            <h4 class="text-xl font-bold text-white mt-8 mb-4">4. High-Signal Sources Consulted:</h4>
+                            <div class="card p-4 flex gap-4 items-center">
+                                <svg class="w-10 h-10 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                                <div><p class="font-semibold text-white">German Car Forums & EV Blogs</p><p class="text-sm text-slate-400"><strong>Search Intent:</strong> Uncover real-world winter range tests and common charging issues.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <div class="strategy-content active" data-strategy-content="car-family">
+                            <h4 class="font-semibold text-white mb-4 text-xl">5. Strategic Output & Verification (Family):</h4>
+                            <div class="text-slate-300 space-y-4 text-sm mb-6">
+                                <p><strong class="text-sky-400 block mb-1">Unique Angle Found:</strong> <span class="highlight-blue">...Most reviews focus on the purchase price, but for families, the 5-Year Total Cost of Ownership (TCO) is what truly matters. We analyze insurance, depreciation, and common repair costs...</span></p>
+                                <p><strong class="text-violet-400 block mb-1">Surprising Statistic Found:</strong> <span class="highlight-green">...a recent German Insurance Association study found that replacing a modern LED headlight after a minor incident can cost more than five years of fuel savings...</span></p>
+                            </div>
+                            <h5 class="font-semibold text-white text-lg mt-6">Predicted GEO Score</h5>
+                            <div class="mt-3 space-y-3 text-sm">
+                                <div><p class="flex justify-between"><span>Brand Sentiment</span><span class="font-bold text-green-400">8/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 80%"></div></div></div>
+                                <div><p class="flex justify-between"><span>Citation Propensity</span><span class="font-bold text-green-400">9/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 90%"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="strategy-content" data-strategy-content="car-commuter">
+                            <h4 class="font-semibold text-white mb-4 text-xl">5. Strategic Output & Verification (Commuter):</h4>
+                            <div class="text-slate-300 space-y-4 text-sm mb-6">
+                                <p><strong class="text-sky-400 block mb-1">Unique Angle Found:</strong> <span class="highlight-blue">...Advertised EV range is often misleading. We analyze the 'real-world winter range' which can be up to 30% lower, a critical factor for German commuters...</span></p>
+                                <p><strong class="text-violet-400 block mb-1">Surprising Statistic Found:</strong> <span class="highlight-green">...data shows that the availability of public fast-chargers during peak evening hours in cities like Munich and Berlin can drop by over 60%, making home-charging capability essential...</span></p>
+                            </div>
+                             <h5 class="font-semibold text-white text-lg mt-6">Predicted GEO Score</h5>
+                            <div class="mt-3 space-y-3 text-sm">
+                                <div><p class="flex justify-between"><span>Brand Sentiment</span><span class="font-bold text-amber-400">6/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-amber-400 h-1.5 rounded-full" style="width: 60%"></div></div></div>
+                                <div><p class="flex justify-between"><span>Citation Propensity</span><span class="font-bold text-green-400">9/10</span></p><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div class="bg-green-400 h-1.5 rounded-full" style="width: 90%"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Unified Dashboard Section -->
+        <section class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">The Unified Dashboard</h2>
+                <p class="text-slate-400 mt-2">From Raw Data to Actionable Insights: The Complete Picture.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 card p-6"><h3 class="text-xl font-bold text-white mb-4">Final Content Viewer</h3><div class="p-4 bg-slate-900/50 rounded-lg border border-slate-700 h-96 overflow-y-auto"><h4 class="text-lg font-bold text-slate-100">How to Find the Best Photographer...</h4><p class="text-sm text-slate-400 mt-2">...Instead of the usual locations, <span class="highlight-blue">consider matching your photographer's style to the unique vibe of a Berlin neighborhood.</span> A raw, edgy shoot in Kreuzberg demands a different approach...</p><p class="text-sm text-slate-400 mt-4">...While budget is important, the real trend is in authenticity. A recent survey revealed that <span class="highlight-green">over 70% of couples now prefer a candid, documentary style...</span></p></div></div>
+                <div class="space-y-8">
+                    <div class="card p-6"><h3 class="text-xl font-bold text-white mb-4">Performance KPIs</h3><div class="space-y-3"><div><p class="text-sm text-slate-400">Cache Hit Ratio</p><p class="text-2xl font-bold text-sky-400">25%</p></div><div><p class="text-sm text-slate-400">Cost Saved (est.)</p><p class="text-2xl font-bold text-green-400">$0.02</p></div><div><p class="text-sm text-slate-400">Time Saved</p><p class="text-2xl font-bold text-violet-400">~4.2s</p></div></div></div>
+                    <div class="card p-6"><h3 class="text-xl font-bold text-white mb-4">Art Direction</h3><div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700"><p class="text-sm text-slate-400 font-mono">"prompt": "A stylish couple, candid photo, laughing on a bridge in Kreuzberg, Berlin. Golden hour, cinematic, bokeh..."</p></div></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-12 px-4 mt-16 border-t border-slate-800">
+        <p class="text-slate-500">Agentic Marketer's Suite - An AI Search Analytics Hackathon Project</p>
+    </footer>
+
+    <!-- Tab Switching Logic -->
+    <script>
+        function openMainTab(event, tabName) {
+            const tabcontent = document.getElementsByClassName("main-tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            const tablinks = document.getElementsByClassName("main-tab-button");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.className += " active";
+        }
+
+        function switchStrategy(mainTabId, strategyName) {
+            const mainTabContainer = document.getElementById(mainTabId);
+
+            const strategyOptions = mainTabContainer.querySelectorAll(`.strategy-option`);
+            strategyOptions.forEach(opt => {
+                opt.classList.remove('active');
+                opt.querySelector('strong').classList.remove('text-sky-400');
+                opt.querySelector('strong').classList.add('text-slate-400');
+            });
+
+            const clickedOption = mainTabContainer.querySelector(`.strategy-option[data-strategy='${strategyName}']`);
+            clickedOption.classList.add('active');
+            clickedOption.querySelector('strong').classList.add('text-sky-400');
+            clickedOption.querySelector('strong').classList.remove('text-slate-400');
+
+            const strategyContents = mainTabContainer.querySelectorAll(`.strategy-content`);
+            strategyContents.forEach(content => content.classList.remove('active'));
+
+            const contentsToShow = mainTabContainer.querySelectorAll(`.strategy-content[data-strategy-content='${mainTabId}-${strategyName}']`);
+            contentsToShow.forEach(content => content.classList.add('active'));
+        }
+    </script>
+</body>
+</html>
