@@ -18,6 +18,13 @@ with st.sidebar:
     config.USE_TAVILY_API = st.toggle("Use Live Tavily API", value=config.USE_TAVILY_API,
                                       help="Turn on to use real Tavily search credits. When off, uses a pre-canned mock cache.")
 
+    st.session_state.selected_model = st.selectbox(
+        "Select Groq Model for Agents:",
+        options=config.AVAILABLE_GROQ_MODELS,
+        index=0,  # Default to the first model in the list
+        help="Choose the primary LLM for content generation."
+    )
+
     with st.expander("Agent System Prompts"):
         st.session_state.cmo_prompt = st.text_area(
             "CMO Prompt", value=config.AGENT_CONFIG["cmo"]["system_message"], height=150)
@@ -39,7 +46,6 @@ try:
     groq_client = Groq(api_key=config.GROQ_API_KEY)
     tavily_client = TavilyClient(api_key=config.TAVILY_API_KEY)
     firewall = SemanticFirewall(groq_client, tavily_client)
-    creative_llm_config, _ = config.get_llm_config(groq_client)
 except Exception as e:
     st.error(f"Failed to initialize clients: {e}")
     st.stop()
@@ -57,25 +63,32 @@ def firewalled_tavily_search(query: str) -> str:
     firewall_result = firewall.query(query)
     st.session_state.agent_chat.append(
         {"sender": "Firewall", "message": f"Status: {firewall_result['status']} for query: {query}"})
-
-    # Handle the new data structure for both mock and real results
     if "error" in firewall_result["result"]:
         return f"Search failed: {firewall_result['result']['error']}"
-
-    # Extract and concatenate content from the 'results' list
     content = "\n".join([obj.get("content", "") for obj in firewall_result["result"].get('results', [])])
     return content
 
 
+# Dynamically create the llm_config for AutoGen
+# This solves the deepcopy error by letting AutoGen handle the client
+creative_llm_config = {
+    "config_list": [{
+        "model": st.session_state.selected_model,
+        "api_key": config.GROQ_API_KEY,
+        "api_type": "groq"
+    }],
+    "temperature": 0.7
+}
+
 # Define AutoGen Agents using settings from UI or config
 cmo_agent = autogen.AssistantAgent(name="ChiefMarketingOfficer", system_message=st.session_state.get(
-    "cmo_prompt", config.AGENT_CONFIG["cmo"]["system_message"]), llm_config=creative_llm_config)
-content_strategist_agent = autogen.AssistantAgent(name="ContentStrategist", system_message=st.session_state.get(
-    "strategist_prompt", config.AGENT_CONFIG["strategist"]["system_message"]), llm_config=creative_llm_config)
+    "cmo_prompt"), llm_config=creative_llm_config)
+content_strategist_agent = autogen.AssistantAgent(
+    name="ContentStrategist", system_message=st.session_state.get("strategist_prompt"), llm_config=creative_llm_config)
 copywriter_agent = autogen.AssistantAgent(name="Copywriter", system_message=st.session_state.get(
-    "copywriter_prompt", config.AGENT_CONFIG["copywriter"]["system_message"]), llm_config=creative_llm_config)
+    "copywriter_prompt"), llm_config=creative_llm_config)
 art_director_agent = autogen.AssistantAgent(name="ArtDirector", system_message=st.session_state.get(
-    "art_director_prompt", config.AGENT_CONFIG["art_director"]["system_message"]), llm_config=creative_llm_config)
+    "art_director_prompt"), llm_config=creative_llm_config)
 user_proxy = autogen.UserProxyAgent(name="MarketingManager", human_input_mode="NEVER",
                                     max_consecutive_auto_reply=10, code_execution_config=False)
 user_proxy.register_function(function_map={"search": firewalled_tavily_search})
