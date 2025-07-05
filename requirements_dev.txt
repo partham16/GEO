@@ -4,7 +4,7 @@
 --trusted-host raw.githubusercontent.com
 --trusted-host github.com
 
-pre-commit
+# pre-commit
 flake8
 black
 pytest
