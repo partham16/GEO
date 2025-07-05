@@ -234,7 +234,7 @@ if st.session_state.results:
                 if "error" not in result["geo"]:
                     for key, value in result["geo"].items():
                         st.metric(label=key.replace('_', ' ').title(),
-                                  value=f"{value['score']}/10", key=f"geo_{key}_{result['title']}")
+                                  value=f"{value['score']}/10")
                         st.caption(value['justification'])
                 else:
                     st.error(f"GEO Analysis Failed: {result['geo']['details']}")
