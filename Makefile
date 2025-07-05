@@ -1,8 +1,8 @@
 develop:
 	pip install -q -U pip
 	pip install -q -r requirements_dev.txt
-	pre-commit install
-	make precommit
+	# pre-commit install
+	# make precommit
 
 install:
 	pip install -q -r requirements.txt
@@ -33,6 +33,6 @@ test:
 	## pytest tests/*
 	echo "No tests set yet"
 
-check: black flake test precommit
+check: black flake test
 
-fullcheck: pylint mypy check
+fullcheck: pylint mypy check precommit
