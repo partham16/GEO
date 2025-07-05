@@ -12,7 +12,8 @@ class SemanticFirewall:
         self.cache: Dict[str, Any] = {}
         self.groq_client = groq_client
         self.tavily_client = tavily_client
-        print(f"Semantic Firewall Initialized. Using Tavily API: {config.USE_TAVILY_API}")
+        self.use_live_api = config.USE_TAVILY_API
+        print(f"Semantic Firewall Initialized. Using Tavily API: {self.use_live_api}")
 
     def _check_similarity(self, new_query: str) -> Tuple[bool, str | None]:
         if not self.cache:
@@ -24,7 +25,11 @@ class SemanticFirewall:
         PREVIOUS QUERIES:\n{cached_queries_str}\n\nNEW QUERY:\n"{new_query}" """
 
         try:
-            model_config = config.FIREWALL_CONFIG["similarity_model"]
+            model_config = {
+                "model": config.DEFAULT_FAST_MODEL,
+                "temperature": 0,
+                "response_format": {"type": "json_object"},
+            }
             chat_completion = self.groq_client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}], **model_config
             )
@@ -48,7 +53,7 @@ class SemanticFirewall:
         else:
             print(f"[Firewall] CACHE MISS for query: '{query}'.")
 
-            if not config.USE_TAVILY_API:
+            if not self.use_live_api:
                 if query in config.MOCK_TAVILY_CACHE:
                     print("[Firewall] Found query in MOCK_TAVILY_CACHE.")
                     result = config.MOCK_TAVILY_CACHE[query]

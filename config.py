@@ -96,25 +96,18 @@ MOCK_TAVILY_CACHE = {
 
 
 # --- Model Configurations ---
-# A list of available models for the UI
 AVAILABLE_GROQ_MODELS = [
-    "llama3.1-8b-instant",
-    "meta-llama/llama-guard-4-12b",
     "llama3-70b-8192",
     "llama3-8b-8192",
     "mixtral-8x7b-32768",
     "gemma-7b-it",
 ]
 
-# Default model for creative tasks
-DEFAULT_CREATIVE_MODEL = "llama3.1-8b-instant"
-
-# Default model for fast, utility tasks (like JSON formatting)
-DEFAULT_FAST_MODEL = "llama3.1-8b-instant"
+DEFAULT_CREATIVE_MODEL = "llama3-70b-8192"
+DEFAULT_FAST_MODEL = "llama3-8b-8192"
 
 
 # --- Agent Configurations ---
-# Default system messages that can be overridden in the Streamlit UI
 AGENT_CONFIG = {
     "cmo": {
         "system_message": "You are a Chief Marketing Officer. Your job is to take a simple user query and transform it into 2-3 distinct, actionable content strategies. For each strategy, define a clear title, target audience, and a unique angle. Respond with a JSON list of these strategies.",

@@ -15,10 +15,10 @@ st.set_page_config(layout="wide", page_title="Agentic Marketer's Suite")
 # --- UI: Sidebar for configuration ---
 with st.sidebar:
     st.title("Configuration")
-    config.USE_TAVILY_API = st.toggle("Use Live Tavily API", value=config.USE_TAVILY_API,
-                                      help="Turn on to use real Tavily search credits. When off, uses a pre-canned mock cache.")
+    use_tavily_api = st.toggle("Use Live Tavily API", value=config.USE_TAVILY_API,
+                               help="Turn on to use real Tavily search credits. When off, uses a pre-canned mock cache.")
 
-    st.session_state.selected_model = st.selectbox(
+    selected_model = st.selectbox(
         "Select Groq Model for Agents:",
         options=config.AVAILABLE_GROQ_MODELS,
         index=config.AVAILABLE_GROQ_MODELS.index(config.DEFAULT_CREATIVE_MODEL),
@@ -67,6 +67,8 @@ if "agent_chat" not in st.session_state:
 
 
 def firewalled_tavily_search(query: str) -> str:
+    # Pass the UI toggle state directly to the firewall
+    firewall.use_live_api = use_tavily_api
     firewall_result = firewall.query(query)
     st.session_state.agent_chat.append(
         {"sender": "Firewall", "message": f"Status: {firewall_result['status']} for query: '{query}'"})
@@ -77,7 +79,7 @@ def firewalled_tavily_search(query: str) -> str:
 
 
 creative_llm_config = {
-    "config_list": [{"model": st.session_state.selected_model, "api_key": config.GROQ_API_KEY, "api_type": "groq"}],
+    "config_list": [{"model": selected_model, "api_key": config.GROQ_API_KEY, "api_type": "groq"}],
     "temperature": 0.7
 }
 
@@ -94,7 +96,7 @@ group_chat_user_proxy = autogen.UserProxyAgent(
     name="MarketingManager",
     human_input_mode=human_input_mode,
     max_consecutive_auto_reply=10,
-    code_execution_config=False,
+    code_execution_config={"work_dir": None},  # Prevents execution attempts
     is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE")
 )
 group_chat_user_proxy.register_function(function_map={"search": firewalled_tavily_search})
@@ -105,16 +107,25 @@ group_chat_user_proxy.register_function(function_map={"search": firewalled_tavil
 def execute_strategy(strategy: dict):
     with st.status(f"Executing Strategy: {strategy.get('title')}", expanded=True) as status:
         status.write("Orchestrating agent workflow...")
+
+        # Define a termination function for the GroupChatManager
+        def is_termination_msg(message):
+            return "TERMINATE" in message.get("content", "").upper()
+
         groupchat = autogen.GroupChat(agents=[group_chat_user_proxy, content_strategist_agent,
                                       copywriter_agent, art_director_agent], messages=[], max_round=15)
-        manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=creative_llm_config)
+        manager = autogen.GroupChatManager(
+            groupchat=groupchat,
+            llm_config=creative_llm_config,
+            is_termination_msg=is_termination_msg  # Key fix: Manager handles termination
+        )
 
         project_plan_prompt = f"""
         Team, execute the following strategy: {json.dumps(strategy, indent=2)}
         Plan:
-        1.  ContentStrategist: Research using 'search' tool and create a detailed outline. Your final message MUST be ONLY the outline, prefixed with "FINAL OUTLINE:".
+        1.  ContentStrategist: Research using the 'search' tool and create a detailed outline. Your final message MUST be ONLY the outline, prefixed with "FINAL OUTLINE:".
         2.  Copywriter: Take the outline and write the blog post. Your final message MUST be ONLY the text, prefixed with "FINAL CONTENT:".
-        3.  ArtDirector: Read the final content and provide image prompts. Your final message MUST be ONLY JSON, prefixed with "FINAL ART DIRECTION:". Then, you must write the word TERMINATE on a new line.
+        3.  ArtDirector: Read the final content and provide image prompts. Your final message MUST be ONLY JSON, prefixed with "FINAL ART DIRECTION:". After your JSON, you must write the word TERMINATE on a new line.
         ContentStrategist, begin.
         """
         group_chat_user_proxy.initiate_chat(manager, message=project_plan_prompt)
@@ -132,7 +143,7 @@ def execute_strategy(strategy: dict):
             return {"error": "Workflow failed to generate all required outputs."}
 
         status.update(label="Analyzing GEO score...", state="running")
-        geo_scores = analyze_geo_content(final_content, groq_client)
+        geo_scores = analyze_geo_content(final_content, groq_client, debug_mode=not use_tavily_api)
 
         status.update(label="Complete!", state="complete", expanded=False)
         return {"title": strategy.get("title"), "content": final_content, "art": art_direction, "geo": geo_scores}
@@ -147,11 +158,17 @@ if st.button("Generate Content Strategy", type="primary"):
     st.session_state.agent_chat = []
 
     with st.spinner("CMO Agent is generating strategies..."):
-        cmo_user_proxy = autogen.UserProxyAgent(name="CMO_User_Proxy", human_input_mode="NEVER", is_termination_msg=lambda x: x.get(
-            "content", "").strip().endswith("]"), max_consecutive_auto_reply=2)
+        # This proxy is specifically for the first step to ensure a clean JSON output
+        cmo_user_proxy = autogen.UserProxyAgent(
+            name="CMO_User_Proxy",
+            human_input_mode="NEVER",
+            is_termination_msg=lambda x: x.get("content", "").strip().endswith("]"),
+            max_consecutive_auto_reply=2,
+            code_execution_config={"work_dir": None}  # Important: prevent code execution
+        )
         cmo_user_proxy.initiate_chat(cmo_agent, message=f"Generate content strategies for the topic: {user_input}")
         cmo_response = cmo_user_proxy.last_message()["content"]
-        st.session_state.agent_chat.extend(cmo_user_proxy.chat_messages[cmo_agent])
+        st.session_state.agent_chat.extend(cmo_user_proxy.chat_messages.get(cmo_agent, []))
 
     try:
         json_response_str = cmo_response[cmo_response.find("["): cmo_response.rfind("]") + 1]
@@ -173,7 +190,7 @@ if "strategies" in st.session_state:
             selected_strategy = next(s for s in st.session_state.strategies if s.get("title")
                                      == selected_strategy_title)
             result = execute_strategy(selected_strategy)
-            st.session_state.results = [result]  # Store as a list
+            st.session_state.results = [result]
             st.rerun()
 
         if st.button("Execute All Strategies", type="primary"):

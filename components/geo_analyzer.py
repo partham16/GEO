@@ -3,9 +3,9 @@ from groq import Groq
 import config  # Import the global config
 
 
-def analyze_geo_content(content: str, groq_client: Groq) -> dict:
+def analyze_geo_content(content: str, groq_client: Groq, debug_mode: bool = False) -> dict:
     """Uses an LLM to perform a GEO Check, using settings from the global config."""
-    if config.DEBUG_MODE:
+    if debug_mode:
         print("[GEO Analyzer] DEBUG MODE: Returning mock GEO scores.")
         return {
             "brand_sentiment": {"score": 8, "justification": "DEBUG: The content is positive."},
@@ -17,7 +17,11 @@ def analyze_geo_content(content: str, groq_client: Groq) -> dict:
     JSON Response Format: {{"brand_sentiment": {{"score": <number>, "justification": "<string>"}}, "citation_propensity": {{"score": <number>, "justification": "<string>"}}}}
     """
     try:
-        model_config = config.GEO_ANALYZER_CONFIG["analysis_model"]
+        model_config = {
+            "model": config.DEFAULT_FAST_MODEL,
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
         chat_completion = groq_client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}], **model_config
         )
