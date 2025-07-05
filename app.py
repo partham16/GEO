@@ -25,13 +25,6 @@ with st.sidebar:
         help="Choose the primary LLM for content generation."
     )
 
-    human_input_mode = st.selectbox(
-        "Human Intervention Mode:",
-        options=["NEVER", "TERMINATE"],
-        index=0,  # Default to NEVER for autonomous operation
-        help="NEVER: Fully autonomous. TERMINATE: If agents get stuck, you can provide input in the terminal."
-    )
-
     with st.expander("Agent System Prompts"):
         st.session_state.cmo_prompt = st.text_area(
             "CMO Prompt", value=config.AGENT_CONFIG["cmo"]["system_message"], height=150)
@@ -67,7 +60,6 @@ if "agent_chat" not in st.session_state:
 
 
 def firewalled_tavily_search(query: str) -> str:
-    # Pass the UI toggle state directly to the firewall
     firewall.use_live_api = use_tavily_api
     firewall_result = firewall.query(query)
     st.session_state.agent_chat.append(
@@ -75,7 +67,7 @@ def firewalled_tavily_search(query: str) -> str:
     if "error" in firewall_result["result"]:
         return f"Search failed: {firewall_result['result']['error']}"
     content = "\n".join([obj.get("content", "") for obj in firewall_result["result"].get('results', [])])
-    return content
+    return content if content else "No relevant content found."
 
 
 creative_llm_config = {
@@ -92,81 +84,89 @@ copywriter_agent = autogen.AssistantAgent(name="Copywriter", system_message=st.s
     "copywriter_prompt"), llm_config=creative_llm_config)
 art_director_agent = autogen.AssistantAgent(name="ArtDirector", system_message=st.session_state.get(
     "art_director_prompt"), llm_config=creative_llm_config)
-group_chat_user_proxy = autogen.UserProxyAgent(
-    name="MarketingManager",
-    human_input_mode=human_input_mode,
-    max_consecutive_auto_reply=10,
-    code_execution_config={"work_dir": None},  # Prevents execution attempts
-    is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE")
-)
-group_chat_user_proxy.register_function(function_map={"search": firewalled_tavily_search})
 
-# --- 3. HELPER FUNCTION FOR RUNNING A STRATEGY ---
+# --- 3. SEQUENTIAL EXECUTION APPROACH ---
 
 
-def execute_strategy(strategy: dict):
+def execute_strategy_sequential(strategy: dict):
+    """Executes a marketing strategy using sequential 1-on-1 agent chats."""
     with st.status(f"Executing Strategy: {strategy.get('title')}", expanded=True) as status:
-        status.write("Orchestrating agent workflow...")
 
-        # Define a termination function for the GroupChatManager
-        def is_termination_msg(message):
-            return "TERMINATE" in message.get("content", "").upper()
+        # Step 1: Content Strategist
+        status.write("Step 1: Content Strategist researching...")
+        strategist_proxy = autogen.UserProxyAgent(name="StrategistProxy", human_input_mode="NEVER", max_consecutive_auto_reply=5,
+                                                  code_execution_config=False, is_termination_msg=lambda x: "FINAL OUTLINE:" in x.get("content", ""))
+        strategist_proxy.register_function(function_map={"search": firewalled_tavily_search})
+        strategist_prompt = f"Research and create a detailed outline for this strategy: {json.dumps(strategy, indent=2)}. Use the search tool. When done, respond with ONLY your outline prefixed with 'FINAL OUTLINE:'."
 
-        groupchat = autogen.GroupChat(agents=[group_chat_user_proxy, content_strategist_agent,
-                                      copywriter_agent, art_director_agent], messages=[], max_round=15)
-        manager = autogen.GroupChatManager(
-            groupchat=groupchat,
-            llm_config=creative_llm_config,
-            is_termination_msg=is_termination_msg  # Key fix: Manager handles termination
-        )
+        try:
+            strategist_proxy.initiate_chat(content_strategist_agent, message=strategist_prompt)
+            strategist_messages = strategist_proxy.chat_messages.get(content_strategist_agent, [])
+            st.session_state.agent_chat.extend(strategist_messages)
+            outline = next((msg["content"].replace("FINAL OUTLINE:", "").strip() for msg in reversed(
+                strategist_messages) if "FINAL OUTLINE:" in msg.get("content", "")), None)
+            if not outline:
+                return {"error": "Content Strategist failed to provide an outline."}
+        except Exception as e:
+            return {"error": f"Content Strategist failed: {str(e)}"}
 
-        project_plan_prompt = f"""
-        Team, execute the following strategy: {json.dumps(strategy, indent=2)}
-        Plan:
-        1.  ContentStrategist: Research using the 'search' tool and create a detailed outline. Your final message MUST be ONLY the outline, prefixed with "FINAL OUTLINE:".
-        2.  Copywriter: Take the outline and write the blog post. Your final message MUST be ONLY the text, prefixed with "FINAL CONTENT:".
-        3.  ArtDirector: Read the final content and provide image prompts. Your final message MUST be ONLY JSON, prefixed with "FINAL ART DIRECTION:". After your JSON, you must write the word TERMINATE on a new line.
-        ContentStrategist, begin.
-        """
-        group_chat_user_proxy.initiate_chat(manager, message=project_plan_prompt)
+        # Step 2: Copywriter
+        status.write("Step 2: Copywriter creating content...")
+        copywriter_proxy = autogen.UserProxyAgent(name="CopywriterProxy", human_input_mode="NEVER", max_consecutive_auto_reply=3,
+                                                  code_execution_config=False, is_termination_msg=lambda x: "FINAL CONTENT:" in x.get("content", ""))
+        copywriter_prompt = f"Based on this outline, write a compelling blog post:\n\n{outline}\n\nRespond with ONLY the blog post text prefixed with 'FINAL CONTENT:'."
 
-        chat_history = groupchat.messages
-        st.session_state.agent_chat.extend(chat_history)
+        try:
+            copywriter_proxy.initiate_chat(copywriter_agent, message=copywriter_prompt)
+            copywriter_messages = copywriter_proxy.chat_messages.get(copywriter_agent, [])
+            st.session_state.agent_chat.extend(copywriter_messages)
+            final_content = next((msg["content"].replace("FINAL CONTENT:", "").strip() for msg in reversed(
+                copywriter_messages) if "FINAL CONTENT:" in msg.get("content", "")), None)
+            if not final_content:
+                return {"error": "Copywriter failed to provide content."}
+        except Exception as e:
+            return {"error": f"Copywriter failed: {str(e)}"}
 
-        status.update(label="Parsing final results...", state="running")
-        final_content = next((msg["content"].replace("FINAL CONTENT:", "").strip() for msg in reversed(chat_history) if msg.get(
-            "name") == "Copywriter" and msg.get("content", "").strip().startswith("FINAL CONTENT:")), None)
-        art_direction = next((msg["content"].replace("FINAL ART DIRECTION:", "").strip().replace("TERMINATE", "") for msg in reversed(
-            chat_history) if msg.get("name") == "ArtDirector" and msg.get("content", "").strip().startswith("FINAL ART DIRECTION:")), None)
+        # Step 3: Art Director
+        status.write("Step 3: Art Director creating image prompts...")
+        art_director_proxy = autogen.UserProxyAgent(name="ArtDirectorProxy", human_input_mode="NEVER", max_consecutive_auto_reply=3,
+                                                    code_execution_config=False, is_termination_msg=lambda x: "FINAL ART DIRECTION:" in x.get("content", ""))
+        art_director_prompt = f"Based on this blog post, create image prompts:\n\n{final_content[:1000]}...\n\nProvide 1-2 detailed image generation prompts in JSON format. Respond with ONLY the JSON prefixed with 'FINAL ART DIRECTION:'."
 
-        if not final_content or not art_direction:
-            return {"error": "Workflow failed to generate all required outputs."}
+        try:
+            art_director_proxy.initiate_chat(art_director_agent, message=art_director_prompt)
+            art_director_messages = art_director_proxy.chat_messages.get(art_director_agent, [])
+            st.session_state.agent_chat.extend(art_director_messages)
+            art_direction = next((msg["content"].replace("FINAL ART DIRECTION:", "").strip() for msg in reversed(
+                art_director_messages) if "FINAL ART DIRECTION:" in msg.get("content", "")), '{"error": "Could not generate art direction."}')
+        except Exception as e:
+            st.warning(f"Art Director failed: {e}")
+            art_direction = '{"error": "Art Director agent failed."}'
 
-        status.update(label="Analyzing GEO score...", state="running")
+        # Step 4: GEO Analysis
+        status.write("Step 4: Analyzing GEO score...")
         geo_scores = analyze_geo_content(final_content, groq_client, debug_mode=not use_tavily_api)
 
         status.update(label="Complete!", state="complete", expanded=False)
         return {"title": strategy.get("title"), "content": final_content, "art": art_direction, "geo": geo_scores}
 
-
 # --- 4. STREAMLIT UI & MAIN LOGIC ---
-st.title("Agentic Marketer's Suite")
-user_input = st.text_input("Enter a simple topic (e.g., 'best car to buy'):", "best photographer in berlin")
 
-if st.button("Generate Content Strategy", type="primary"):
+
+def generate_strategies():
     st.session_state.results = []
     st.session_state.agent_chat = []
 
     with st.spinner("CMO Agent is generating strategies..."):
-        # This proxy is specifically for the first step to ensure a clean JSON output
         cmo_user_proxy = autogen.UserProxyAgent(
             name="CMO_User_Proxy",
             human_input_mode="NEVER",
-            is_termination_msg=lambda x: x.get("content", "").strip().endswith("]"),
+            is_termination_msg=lambda x: "]" in x.get("content", ""),
             max_consecutive_auto_reply=2,
-            code_execution_config={"work_dir": None}  # Important: prevent code execution
+            code_execution_config=False
         )
-        cmo_user_proxy.initiate_chat(cmo_agent, message=f"Generate content strategies for the topic: {user_input}")
+        cmo_user_proxy.initiate_chat(
+            cmo_agent, message=f"Generate content strategies for the topic: {st.session_state.user_input}")
         cmo_response = cmo_user_proxy.last_message()["content"]
         st.session_state.agent_chat.extend(cmo_user_proxy.chat_messages.get(cmo_agent, []))
 
@@ -176,27 +176,39 @@ if st.button("Generate Content Strategy", type="primary"):
     except (json.JSONDecodeError, TypeError):
         st.error("The CMO agent did not return a valid JSON list. Please try again.")
         st.code(cmo_response)
-        st.stop()
+        st.session_state.strategies = None
 
-if "strategies" in st.session_state:
+
+st.title("Agentic Marketer's Suite")
+st.text_input("Enter a simple topic (e.g., 'best car to buy'):", "best photographer in berlin", key="user_input")
+
+if st.button("Generate Content Strategy", type="primary"):
+    generate_strategies()
+
+if "strategies" in st.session_state and st.session_state.strategies:
     st.subheader("Step 2: Choose a Strategy to Execute")
-    col1, col2 = st.columns([3, 1])
+
+    if st.button("🔄 Regenerate Strategies"):
+        generate_strategies()
+        st.rerun()
+
+    strategy_titles = [s.get("title", f"Strategy {i + 1}") for i, s in enumerate(st.session_state.strategies)]
+    selected_strategy_title = st.radio("Select a single strategy:", strategy_titles,
+                                       horizontal=True, label_visibility="collapsed")
+
+    col1, col2 = st.columns([2, 1])
     with col1:
-        strategy_titles = [s.get("title", f"Strategy {i + 1}") for i, s in enumerate(st.session_state.strategies)]
-        selected_strategy_title = st.radio("Select a single strategy:", strategy_titles,
-                                           horizontal=True, label_visibility="collapsed")
-    with col2:
         if st.button("Execute Selected Strategy"):
             selected_strategy = next(s for s in st.session_state.strategies if s.get("title")
                                      == selected_strategy_title)
-            result = execute_strategy(selected_strategy)
+            result = execute_strategy_sequential(selected_strategy)
             st.session_state.results = [result]
             st.rerun()
-
-        if st.button("Execute All Strategies", type="primary"):
+    with col2:
+        if st.button("Execute All Strategies", type="secondary"):
             all_results = []
             for strategy in st.session_state.strategies:
-                result = execute_strategy(strategy)
+                result = execute_strategy_sequential(strategy)
                 all_results.append(result)
             st.session_state.results = all_results
             st.rerun()
